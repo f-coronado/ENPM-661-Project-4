@@ -45,8 +45,6 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 // Shapes for the table.stl
-// #include <shapes/shapes.h>
-#include <moveit/robot_model/link_model.h>
 #include <geometric_shapes/mesh_operations.h>
 
 // The circle constant tau = 2*pi. One tau is one rotation in radians.
@@ -283,14 +281,14 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[3].primitives.resize(1);
   collision_objects[3].primitives[0].type = collision_objects[1].primitives[0].BOX;
   collision_objects[3].primitives[0].dimensions.resize(3);
-  collision_objects[3].primitives[0].dimensions[0] = 0.1;
-  collision_objects[3].primitives[0].dimensions[1] = 0.5;
-  collision_objects[3].primitives[0].dimensions[2] = 0.2;
+  collision_objects[3].primitives[0].dimensions[0] = 0.05;
+  collision_objects[3].primitives[0].dimensions[1] = 0.05;
+  collision_objects[3].primitives[0].dimensions[2] = 0.6;
   /* Define the pose of the object. */
   collision_objects[3].primitive_poses.resize(1);
-  collision_objects[3].primitive_poses[0].position.x = 0.8;
-  collision_objects[3].primitive_poses[0].position.y = 0;
-  collision_objects[3].primitive_poses[0].position.z = 0.5;
+  collision_objects[3].primitive_poses[0].position.x = 0.12;
+  collision_objects[3].primitive_poses[0].position.y = .12;
+  collision_objects[3].primitive_poses[0].position.z = 0.3;
   collision_objects[3].primitive_poses[0].orientation.w = 2.0;
   // END_SUB_TUTORIAL
 
@@ -302,6 +300,7 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
 
   // collision_objects[4].primitives.resize(1);
   // shapes::Mesh* m1 = shapes::createMeshFromResource("/home/fabrizzio/catkin_ws/src/moveit_tutorials/doc/pick_place/src/Table.stl");
+  shapes::Mesh* m1 = shapes::createMeshFromResource("package://moveit_tutorials/doc/pick_place/src/Table.stl");
   // collision_objects[4].primitives[0].dimensions.resize(3);
   // collision_objects[4].primitives[0].dimensions[0] = 0.1;
   // collision_objects[4].primitives[0].dimensions[1] = 0.5;
@@ -314,7 +313,7 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   // collision_objects[4].primitive_poses[0].orientation.w = 2.0;
   // // END_SUB_TUTORIAL
 
-  // collision_objects[4].operation = collision_objects[3].ADD;
+  // collision_objects[4].operation = m1.ADD;
 
   planning_scene_interface.applyCollisionObjects(collision_objects);
 }
@@ -332,6 +331,7 @@ int main(int argc, char** argv)
   group.setPlanningTime(45.0);
 
   addCollisionObjects(planning_scene_interface);
+  // shapes::Mesh* m1 = shapes::createMeshFromResource("package://moveit_tutorials/doc/pick_place/src/Table.stl");
 
   // Wait a bit for ROS things to initialize
   ros::WallDuration(1.0).sleep();
