@@ -44,6 +44,11 @@
 // TF2
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
+// Shapes for the table.stl
+// #include <shapes/shapes.h>
+#include <moveit/robot_model/link_model.h>
+#include <geometric_shapes/mesh_operations.h>
+
 // The circle constant tau = 2*pi. One tau is one rotation in radians.
 const double tau = 2 * M_PI;
 
@@ -201,7 +206,7 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   // ^^^^^^^^^^^^^^^^^^^^
   // Create vector to hold 3 collision objects.
   std::vector<moveit_msgs::CollisionObject> collision_objects;
-  collision_objects.resize(3);
+  collision_objects.resize(4);
 
   // Add the first table where the cube will originally be kept.
   collision_objects[0].id = "table1";
@@ -279,7 +284,7 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   collision_objects[3].primitives[0].type = collision_objects[1].primitives[0].BOX;
   collision_objects[3].primitives[0].dimensions.resize(3);
   collision_objects[3].primitives[0].dimensions[0] = 0.1;
-  collision_objects[3].primitives[0].dimensions[1] = 0.12;
+  collision_objects[3].primitives[0].dimensions[1] = 0.5;
   collision_objects[3].primitives[0].dimensions[2] = 0.2;
   /* Define the pose of the object. */
   collision_objects[3].primitive_poses.resize(1);
@@ -290,6 +295,26 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   // END_SUB_TUTORIAL
 
   collision_objects[3].operation = collision_objects[3].ADD;
+
+  // adding imported table.stl
+  // collision_objects[4].id = "newTable";
+  // collision_objects[4].header.frame_id = "panda_link0";
+
+  // collision_objects[4].primitives.resize(1);
+  // shapes::Mesh* m1 = shapes::createMeshFromResource("/home/fabrizzio/catkin_ws/src/moveit_tutorials/doc/pick_place/src/Table.stl");
+  // collision_objects[4].primitives[0].dimensions.resize(3);
+  // collision_objects[4].primitives[0].dimensions[0] = 0.1;
+  // collision_objects[4].primitives[0].dimensions[1] = 0.5;
+  // collision_objects[4].primitives[0].dimensions[2] = 0.2;
+  // /* Define the pose of the object. */
+  // collision_objects[4].primitive_poses.resize(1);
+  // collision_objects[4].primitive_poses[0].position.x = 0.8;
+  // collision_objects[4].primitive_poses[0].position.y = 0;
+  // collision_objects[4].primitive_poses[0].position.z = 0.5;
+  // collision_objects[4].primitive_poses[0].orientation.w = 2.0;
+  // // END_SUB_TUTORIAL
+
+  // collision_objects[4].operation = collision_objects[3].ADD;
 
   planning_scene_interface.applyCollisionObjects(collision_objects);
 }
