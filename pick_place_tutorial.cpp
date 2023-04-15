@@ -46,6 +46,10 @@
 
 // Shapes for the table.stl
 #include <geometric_shapes/mesh_operations.h>
+#include <geometric_shapes/shape_operations.h>
+#include <geometric_shapes/shapes.h>
+#include <shape_msgs/Mesh.h>
+
 
 // The circle constant tau = 2*pi. One tau is one rotation in radians.
 const double tau = 2 * M_PI;
@@ -129,6 +133,12 @@ void pick(moveit::planning_interface::MoveGroupInterface& move_group)
   openGripper(grasps[0].pre_grasp_posture);
   // END_SUB_TUTORIAL
 
+  // ros::WallDuration(10.0).sleep();
+  // closedGripper(grasps[0].grasp_posture);
+  // ros::WallDuration(10.0).sleep();
+  // openGripper(grasps[0].pre_grasp_posture);
+  // ros::WallDuration(10.0).sleep();
+
   // BEGIN_SUB_TUTORIAL pick2
   // Setting posture of eef during grasp
   // +++++++++++++++++++++++++++++++++++
@@ -204,7 +214,7 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   // ^^^^^^^^^^^^^^^^^^^^
   // Create vector to hold 3 collision objects.
   std::vector<moveit_msgs::CollisionObject> collision_objects;
-  collision_objects.resize(4);
+  collision_objects.resize(5);
 
   // Add the first table where the cube will originally be kept.
   collision_objects[0].id = "table1";
@@ -294,23 +304,41 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
 
   collision_objects[3].operation = collision_objects[3].ADD;
 
-  // adding imported table.stl
-  // collision_objects[4].id = "newTable";
-  // collision_objects[4].header.frame_id = "panda_link0";
+  // moveit_msgs::CollisionObject collision_objects[4];
+  collision_objects[4].id = "TableSTL";
+  collision_objects[4].header.frame_id = "panda_link0";
 
-  // collision_objects[4].primitives.resize(1);
-  // shapes::Mesh* m1 = shapes::createMeshFromResource("/home/fabrizzio/catkin_ws/src/moveit_tutorials/doc/pick_place/src/Table.stl");
-  shapes::Mesh* m1 = shapes::createMeshFromResource("package://moveit_tutorials/doc/pick_place/src/Table.stl");
-  // collision_objects[4].primitives[0].dimensions.resize(3);
-  // collision_objects[4].primitives[0].dimensions[0] = 0.1;
-  // collision_objects[4].primitives[0].dimensions[1] = 0.5;
-  // collision_objects[4].primitives[0].dimensions[2] = 0.2;
-  // /* Define the pose of the object. */
-  // collision_objects[4].primitive_poses.resize(1);
-  // collision_objects[4].primitive_poses[0].position.x = 0.8;
-  // collision_objects[4].primitive_poses[0].position.y = 0;
-  // collision_objects[4].primitive_poses[0].position.z = 0.5;
-  // collision_objects[4].primitive_poses[0].orientation.w = 2.0;
+  const Eigen::Vector3d scale(.00045, .00045, .00045); // creating vector to scale down the TableSTL mesh
+  shapes::Mesh* m1 = shapes::createMeshFromResource("package://moveit_tutorials/doc/pick_place/src/Table.stl", scale);
+  ROS_INFO("TableSTL mesh loaded");
+  shape_msgs::Mesh mesh;
+  shapes::ShapeMsg mesh_msg;
+  shapes::constructMsgFromShape(m1, mesh_msg);
+  mesh = boost::get<shape_msgs::Mesh>(mesh_msg);
+  collision_objects[4].meshes.resize(1);
+  collision_objects[4].mesh_poses.resize(1);
+  collision_objects[4].meshes[0] = mesh;
+
+  // defining the pose of collision_objects[4] which is our table mesh
+  collision_objects[4].mesh_poses[0].position.x = 0.35;
+  collision_objects[4].mesh_poses[0].position.y = -0.35;
+  collision_objects[4].mesh_poses[0].position.z = 0.0;
+  collision_objects[4].mesh_poses[0].orientation.w= 1.0;
+  collision_objects[4].mesh_poses[0].orientation.x= 0.0;
+  collision_objects[4].mesh_poses[0].orientation.y= 0.0;
+  collision_objects[4].mesh_poses[0].orientation.z= 0.0;  
+
+  collision_objects[4].meshes.push_back(mesh);
+  collision_objects[4].mesh_poses.push_back(collision_objects[4].mesh_poses[0]);
+  collision_objects[4].operation = collision_objects[4].ADD;
+      
+  // std::vector<moveit_msgs::CollisionObject> collision_objects;
+  // collision_objects.push_back(collision_objects[4]); <<
+     
+      //Now, let’s add the collision object into the world
+  // ROS_INFO("Add an object into the world");
+  // current_scene.addCollisionObjects(collision_objects);
+  // sleep(1.0);
   // // END_SUB_TUTORIAL
 
   // collision_objects[4].operation = m1.ADD;
