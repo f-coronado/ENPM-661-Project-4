@@ -172,9 +172,9 @@ void place(moveit::planning_interface::MoveGroupInterface& group)
   place_location[0].place_pose.pose.orientation = tf2::toMsg(orientation);
 
   /* For place location, we set the value to the exact location of the center of the object. */
-  place_location[0].place_pose.pose.position.x = 0;
+  place_location[0].place_pose.pose.position.x = -.25;
   place_location[0].place_pose.pose.position.y = 0.5;
-  place_location[0].place_pose.pose.position.z = 0.5;
+  place_location[0].place_pose.pose.position.z = 0.01 + .2/2; // ground plane is .01 height then half of object is .2/2
 
   // Setting pre-place approach
   // ++++++++++++++++++++++++++
@@ -200,7 +200,7 @@ void place(moveit::planning_interface::MoveGroupInterface& group)
   openGripper(place_location[0].post_place_posture);
 
   // Set support surface as table2.
-  group.setSupportSurfaceName("table2");
+  // group.setSupportSurfaceName("ground");
   // Call place to place the object using the place locations given.
   group.place("object", place_location);
   // END_SUB_TUTORIAL
@@ -240,73 +240,73 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
 
   // BEGIN_SUB_TUTORIAL table2
   // Add the second table where we will be placing the cube.
-  collision_objects[1].id = "table2";
+  // collision_objects[1].id = "table2";
+  // collision_objects[1].header.frame_id = "panda_link0";
+
+  // /* Define the primitive and its dimensions. */
+  // collision_objects[1].primitives.resize(1);
+  // collision_objects[1].primitives[0].type = collision_objects[1].primitives[0].BOX;
+  // collision_objects[1].primitives[0].dimensions.resize(3);
+  // collision_objects[1].primitives[0].dimensions[0] = 0.4;
+  // collision_objects[1].primitives[0].dimensions[1] = 0.2;
+  // collision_objects[1].primitives[0].dimensions[2] = 0.4;
+
+  // /* Define the pose of the table. */
+  // collision_objects[1].primitive_poses.resize(1);
+  // collision_objects[1].primitive_poses[0].position.x = 0;
+  // collision_objects[1].primitive_poses[0].position.y = 0.5;
+  // collision_objects[1].primitive_poses[0].position.z = 0.2;
+  // collision_objects[1].primitive_poses[0].orientation.w = 1.0;
+  // // END_SUB_TUTORIAL
+
+  // collision_objects[1].operation = collision_objects[1].ADD;
+
+  // BEGIN_SUB_TUTORIAL object
+  // Define the object that we will be manipulating
   collision_objects[1].header.frame_id = "panda_link0";
+  collision_objects[1].id = "object";
 
   /* Define the primitive and its dimensions. */
   collision_objects[1].primitives.resize(1);
   collision_objects[1].primitives[0].type = collision_objects[1].primitives[0].BOX;
   collision_objects[1].primitives[0].dimensions.resize(3);
-  collision_objects[1].primitives[0].dimensions[0] = 0.4;
-  collision_objects[1].primitives[0].dimensions[1] = 0.2;
-  collision_objects[1].primitives[0].dimensions[2] = 0.4;
+  collision_objects[1].primitives[0].dimensions[0] = 0.02;
+  collision_objects[1].primitives[0].dimensions[1] = 0.02;
+  collision_objects[1].primitives[0].dimensions[2] = 0.2;
 
-  /* Define the pose of the table. */
+  /* Define the pose of the object. */
   collision_objects[1].primitive_poses.resize(1);
-  collision_objects[1].primitive_poses[0].position.x = 0;
-  collision_objects[1].primitive_poses[0].position.y = 0.5;
-  collision_objects[1].primitive_poses[0].position.z = 0.2;
+  collision_objects[1].primitive_poses[0].position.x = 0.5;
+  collision_objects[1].primitive_poses[0].position.y = 0;
+  collision_objects[1].primitive_poses[0].position.z = 0.5;
   collision_objects[1].primitive_poses[0].orientation.w = 1.0;
   // END_SUB_TUTORIAL
 
   collision_objects[1].operation = collision_objects[1].ADD;
 
-  // BEGIN_SUB_TUTORIAL object
-  // Define the object that we will be manipulating
+  // adding obstacle to avoid for project 4
+  collision_objects[2].id = "obstacle";
   collision_objects[2].header.frame_id = "panda_link0";
-  collision_objects[2].id = "object";
 
-  /* Define the primitive and its dimensions. */
   collision_objects[2].primitives.resize(1);
   collision_objects[2].primitives[0].type = collision_objects[1].primitives[0].BOX;
   collision_objects[2].primitives[0].dimensions.resize(3);
-  collision_objects[2].primitives[0].dimensions[0] = 0.02;
-  collision_objects[2].primitives[0].dimensions[1] = 0.02;
-  collision_objects[2].primitives[0].dimensions[2] = 0.2;
-
+  collision_objects[2].primitives[0].dimensions[0] = 0.05;
+  collision_objects[2].primitives[0].dimensions[1] = 0.05;
+  collision_objects[2].primitives[0].dimensions[2] = 0.6;
   /* Define the pose of the object. */
   collision_objects[2].primitive_poses.resize(1);
-  collision_objects[2].primitive_poses[0].position.x = 0.5;
-  collision_objects[2].primitive_poses[0].position.y = 0;
-  collision_objects[2].primitive_poses[0].position.z = 0.5;
-  collision_objects[2].primitive_poses[0].orientation.w = 1.0;
+  collision_objects[2].primitive_poses[0].position.x = 0.12;
+  collision_objects[2].primitive_poses[0].position.y = .12;
+  collision_objects[2].primitive_poses[0].position.z = 0.3;
+  collision_objects[2].primitive_poses[0].orientation.w = 2.0;
   // END_SUB_TUTORIAL
 
   collision_objects[2].operation = collision_objects[2].ADD;
 
-  // adding obstacle to avoid for project 4
-  collision_objects[3].id = "obstacle";
-  collision_objects[3].header.frame_id = "panda_link0";
-
-  collision_objects[3].primitives.resize(1);
-  collision_objects[3].primitives[0].type = collision_objects[1].primitives[0].BOX;
-  collision_objects[3].primitives[0].dimensions.resize(3);
-  collision_objects[3].primitives[0].dimensions[0] = 0.05;
-  collision_objects[3].primitives[0].dimensions[1] = 0.05;
-  collision_objects[3].primitives[0].dimensions[2] = 0.6;
-  /* Define the pose of the object. */
-  collision_objects[3].primitive_poses.resize(1);
-  collision_objects[3].primitive_poses[0].position.x = 0.12;
-  collision_objects[3].primitive_poses[0].position.y = .12;
-  collision_objects[3].primitive_poses[0].position.z = 0.3;
-  collision_objects[3].primitive_poses[0].orientation.w = 2.0;
-  // END_SUB_TUTORIAL
-
-  collision_objects[3].operation = collision_objects[3].ADD;
-
   // moveit_msgs::CollisionObject collision_objects[4];
-  collision_objects[4].id = "TableSTL";
-  collision_objects[4].header.frame_id = "panda_link0";
+  collision_objects[3].id = "TableSTL";
+  collision_objects[3].header.frame_id = "panda_link0";
 
   const Eigen::Vector3d scale(.00045, .00045, .00045); // creating vector to scale down the TableSTL mesh
   shapes::Mesh* m1 = shapes::createMeshFromResource("package://moveit_tutorials/doc/pick_place/src/Table.stl", scale);
@@ -315,33 +315,48 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   shapes::ShapeMsg mesh_msg;
   shapes::constructMsgFromShape(m1, mesh_msg);
   mesh = boost::get<shape_msgs::Mesh>(mesh_msg);
-  collision_objects[4].meshes.resize(1);
-  collision_objects[4].mesh_poses.resize(1);
-  collision_objects[4].meshes[0] = mesh;
+  collision_objects[3].meshes.resize(1);
+  collision_objects[3].mesh_poses.resize(1);
+  collision_objects[3].meshes[0] = mesh;
 
-  // defining the pose of collision_objects[4] which is our table mesh
-  collision_objects[4].mesh_poses[0].position.x = 0.35;
-  collision_objects[4].mesh_poses[0].position.y = -0.35;
-  collision_objects[4].mesh_poses[0].position.z = 0.0;
-  collision_objects[4].mesh_poses[0].orientation.w= 1.0;
-  collision_objects[4].mesh_poses[0].orientation.x= 0.0;
-  collision_objects[4].mesh_poses[0].orientation.y= 0.0;
-  collision_objects[4].mesh_poses[0].orientation.z= 0.0;  
+  // defining the pose of collision_objects[3] which is our table mesh
+  collision_objects[3].mesh_poses[0].position.x = 0.35;
+  collision_objects[3].mesh_poses[0].position.y = -0.35;
+  collision_objects[3].mesh_poses[0].position.z = 0.0;
+  collision_objects[3].mesh_poses[0].orientation.w= 1.0;
+  collision_objects[3].mesh_poses[0].orientation.x= 0.0;
+  collision_objects[3].mesh_poses[0].orientation.y= 0.0;
+  collision_objects[3].mesh_poses[0].orientation.z= 0.0;  
 
-  collision_objects[4].meshes.push_back(mesh);
-  collision_objects[4].mesh_poses.push_back(collision_objects[4].mesh_poses[0]);
-  collision_objects[4].operation = collision_objects[4].ADD;
-      
-  // std::vector<moveit_msgs::CollisionObject> collision_objects;
-  // collision_objects.push_back(collision_objects[4]); <<
-     
-      //Now, let’s add the collision object into the world
-  // ROS_INFO("Add an object into the world");
-  // current_scene.addCollisionObjects(collision_objects);
-  // sleep(1.0);
+  collision_objects[3].meshes.push_back(mesh);
+  collision_objects[3].mesh_poses.push_back(collision_objects[3].mesh_poses[0]);
+  collision_objects[3].operation = collision_objects[3].ADD;
   // // END_SUB_TUTORIAL
 
   // collision_objects[4].operation = m1.ADD;
+
+    // BEGIN_SUB_TUTORIAL table2
+  // Add the second table where we will be placing the cube.
+  collision_objects[4].id = "ground";
+  collision_objects[4].header.frame_id = "panda_link0";
+
+  /* Define the primitive and its dimensions. */
+  collision_objects[4].primitives.resize(1);
+  collision_objects[4].primitives[0].type = collision_objects[4].primitives[0].BOX;
+  collision_objects[4].primitives[0].dimensions.resize(3);
+  collision_objects[4].primitives[0].dimensions[0] = 0.3;
+  collision_objects[4].primitives[0].dimensions[1] = 0.3;
+  collision_objects[4].primitives[0].dimensions[2] = 0.01;
+
+  /* Define the pose of the table. */
+  collision_objects[4].primitive_poses.resize(1);
+  collision_objects[4].primitive_poses[0].position.x = -.25;
+  collision_objects[4].primitive_poses[0].position.y = 0.5;
+  collision_objects[4].primitive_poses[0].position.z = 0.0;
+  collision_objects[4].primitive_poses[0].orientation.w = 1.0;
+  // END_SUB_TUTORIAL
+
+  collision_objects[4].operation = collision_objects[1].ADD;
 
   planning_scene_interface.applyCollisionObjects(collision_objects);
 }
