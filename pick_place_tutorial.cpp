@@ -174,7 +174,7 @@ void place(moveit::planning_interface::MoveGroupInterface& group)
   /* For place location, we set the value to the exact location of the center of the object. */
   place_location[0].place_pose.pose.position.x = -.25;
   place_location[0].place_pose.pose.position.y = 0.5;
-  place_location[0].place_pose.pose.position.z = 0.01 + .2/2; // ground plane is .01 height then half of object is .2/2
+  place_location[0].place_pose.pose.position.z = 0.1/2; //  half of object is .2/2
 
   // Setting pre-place approach
   // ++++++++++++++++++++++++++
@@ -214,7 +214,7 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   // ^^^^^^^^^^^^^^^^^^^^
   // Create vector to hold 3 collision objects.
   std::vector<moveit_msgs::CollisionObject> collision_objects;
-  collision_objects.resize(5);
+  collision_objects.resize(4);
 
   // Add the first table where the cube will originally be kept.
   collision_objects[0].id = "table1";
@@ -237,29 +237,6 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
   // END_SUB_TUTORIAL
 
   collision_objects[0].operation = collision_objects[0].ADD;
-
-  // BEGIN_SUB_TUTORIAL table2
-  // Add the second table where we will be placing the cube.
-  // collision_objects[1].id = "table2";
-  // collision_objects[1].header.frame_id = "panda_link0";
-
-  // /* Define the primitive and its dimensions. */
-  // collision_objects[1].primitives.resize(1);
-  // collision_objects[1].primitives[0].type = collision_objects[1].primitives[0].BOX;
-  // collision_objects[1].primitives[0].dimensions.resize(3);
-  // collision_objects[1].primitives[0].dimensions[0] = 0.4;
-  // collision_objects[1].primitives[0].dimensions[1] = 0.2;
-  // collision_objects[1].primitives[0].dimensions[2] = 0.4;
-
-  // /* Define the pose of the table. */
-  // collision_objects[1].primitive_poses.resize(1);
-  // collision_objects[1].primitive_poses[0].position.x = 0;
-  // collision_objects[1].primitive_poses[0].position.y = 0.5;
-  // collision_objects[1].primitive_poses[0].position.z = 0.2;
-  // collision_objects[1].primitive_poses[0].orientation.w = 1.0;
-  // // END_SUB_TUTORIAL
-
-  // collision_objects[1].operation = collision_objects[1].ADD;
 
   // BEGIN_SUB_TUTORIAL object
   // Define the object that we will be manipulating
@@ -337,26 +314,26 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& pla
 
     // BEGIN_SUB_TUTORIAL table2
   // Add the second table where we will be placing the cube.
-  collision_objects[4].id = "ground";
-  collision_objects[4].header.frame_id = "panda_link0";
+  // collision_objects[4].id = "ground";
+  // collision_objects[4].header.frame_id = "panda_link0";
 
-  /* Define the primitive and its dimensions. */
-  collision_objects[4].primitives.resize(1);
-  collision_objects[4].primitives[0].type = collision_objects[4].primitives[0].BOX;
-  collision_objects[4].primitives[0].dimensions.resize(3);
-  collision_objects[4].primitives[0].dimensions[0] = 0.3;
-  collision_objects[4].primitives[0].dimensions[1] = 0.3;
-  collision_objects[4].primitives[0].dimensions[2] = 0.01;
+  // /* Define the primitive and its dimensions. */
+  // collision_objects[4].primitives.resize(1);
+  // collision_objects[4].primitives[0].type = collision_objects[4].primitives[0].BOX;
+  // collision_objects[4].primitives[0].dimensions.resize(3);
+  // collision_objects[4].primitives[0].dimensions[0] = 0.3;
+  // collision_objects[4].primitives[0].dimensions[1] = 0.3;
+  // collision_objects[4].primitives[0].dimensions[2] = 0.0;
 
-  /* Define the pose of the table. */
-  collision_objects[4].primitive_poses.resize(1);
-  collision_objects[4].primitive_poses[0].position.x = -.25;
-  collision_objects[4].primitive_poses[0].position.y = 0.5;
-  collision_objects[4].primitive_poses[0].position.z = 0.0;
-  collision_objects[4].primitive_poses[0].orientation.w = 1.0;
-  // END_SUB_TUTORIAL
+  // /* Define the pose of the table. */
+  // collision_objects[4].primitive_poses.resize(1);
+  // collision_objects[4].primitive_poses[0].position.x = -.25;
+  // collision_objects[4].primitive_poses[0].position.y = 0.5;
+  // collision_objects[4].primitive_poses[0].position.z = 0.0;
+  // collision_objects[4].primitive_poses[0].orientation.w = 1.0;
+  // // END_SUB_TUTORIAL
 
-  collision_objects[4].operation = collision_objects[1].ADD;
+  // collision_objects[4].operation = collision_objects[1].ADD;
 
   planning_scene_interface.applyCollisionObjects(collision_objects);
 }
